@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 env:
-  project_id: lucas-sandbox-lywd4
+  project_id: deon-sandbox-lc7j4
 
 jobs:
   terraform:
