@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - feature/create-cicd-for-terraform
+      - main
     paths:
       - "**.tf"
       - "**pipeline.yaml"
