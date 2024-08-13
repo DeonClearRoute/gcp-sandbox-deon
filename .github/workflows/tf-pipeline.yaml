@@ -1,0 +1,47 @@
+name: Terraform CI/CD pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**.tf"
+  push:
+    branches:
+      - feature/create-cicd-for-terraform
+    paths:
+      - "**.tf"
+      - "**pipeline.yaml"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  project_id: lucas-sandbox-lywd4
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v3
+      - name: GCP auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: "access_token"
+          export_environment_variables: true
+          workload_identity_provider: "projects/895142966567/locations/global/workloadIdentityPools/clearroute-github/providers/clearroute-github-identity-pool"
+          service_account: "github-auth@${{ env.project_id }}.iam.gserviceaccount.com"
+
+      - name: set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.3
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform plan
+        run: terraform plan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
